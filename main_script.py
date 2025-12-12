@@ -12,7 +12,7 @@ def send_telegram_message(token, chat_id, text):
         print("⚠️ Error enviando mensaje a Telegram:", e)
         return None
 
-BOT_TOKEN = os.getenv("SECRET_BOT_TOKEN")
+BOT_TOKEN = os.getenv("BOT_TOKEN")
 CHAT_ID = os.getenv("CHAT_ID")
 MESSAGE = os.getenv("MESSAGE")
 
