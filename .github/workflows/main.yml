@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
 
     env:  
-      SECRET_BOT_TOKEN: ${{ secrets.SECRET_BOT_TOKEN }}
+      BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
       CHAT_ID: ${{ secrets.CHAT_ID }}
       MESSAGE: ${{ secrets.MESSAGE }}
 
