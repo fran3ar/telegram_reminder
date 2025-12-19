@@ -1,0 +1,1 @@
+DB_URL = postgresql://MyDatabaseNAME:MYPASSWORD@fregregerger:5434/username
