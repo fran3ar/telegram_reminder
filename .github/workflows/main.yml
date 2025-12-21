@@ -13,8 +13,7 @@ jobs:
 
     env:  
       BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
-      CHAT_ID: ${{ secrets.CHAT_ID }}
-      MESSAGE: ${{ secrets.MESSAGE }}
+      DB_URL: ${{ secrets.DB_URL }}
 
     steps:  
       - name: Checkout repository  
