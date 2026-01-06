@@ -101,9 +101,8 @@ print(now_yyyymm)
 
 #%%
 
-
-
-from datetime import datetime, time
+import time
+from datetime import datetime, time as dt_time 
 
 for _, row in data1.iterrows():
     should_send = False
@@ -138,14 +137,14 @@ for _, row in data1.iterrows():
     # DAILY
     if (
         frequency == "daily"
-        and time(hour_value, int(minute_value)) <= time(now.hour, now.minute)
+        and dt_time(hour_value, int(minute_value)) <= dt_time((now.hour) - 3, now.minute)
         and (
             pd.isna(last_completed_at)
             or last_completed_at.date() != now.date()
         )
     ):
-        print(f"time(hour_value, minute_value): {time(hour_value, int(minute_value))}")
-        print(f"time(now.hour, now.minute): {time(now.hour, now.minute)}")
+        print(f"time(hour_value, minute_value): {dt_time(hour_value, int(minute_value))}")
+        print(f"time(now.hour, now.minute): {dt_time((now.hour)-3, now.minute)}")
         should_send = True
     
     if should_send:
@@ -160,9 +159,10 @@ for _, row in data1.iterrows():
         WHERE id = %s
         """
 
-        update_record(query123, (now, row['id']))
+        update_record(query123, (datetime(int(now.year),int(now.month),int(now.day),int(now.hour) - 3,int(now.minute)), row['id']))
 
-        time.sleep(3)  # delays for 3 seconds
+    time.sleep(3)  # delays for 3 seconds
+
 
 #%%
 
