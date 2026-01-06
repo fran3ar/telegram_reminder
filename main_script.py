@@ -103,6 +103,8 @@ print(now_yyyymm)
 
 
 
+from datetime import datetime, time
+
 for _, row in data1.iterrows():
     should_send = False
     frequency = row['frequency']
@@ -123,7 +125,27 @@ for _, row in data1.iterrows():
     print(f"frequency: {frequency}")
     print(f"id: {row['id']}")
 
-    if frequency == "monthly" and round(day_value) <= now.day and last_completed_at_yyyymm != now_yyyymm:
+    # MONTHLY
+    if (
+        frequency == "monthly"
+        and round(day_value) <= now.day
+        and last_completed_at_yyyymm != now_yyyymm
+    ):
+        print(f"last_completed_at_yyyymm: {last_completed_at_yyyymm}")
+        print(f"now_yyyymm: {now_yyyymm}")
+        should_send = True
+
+    # DAILY
+    if (
+        frequency == "daily"
+        and time(hour_value, int(minute_value)) <= time(now.hour, now.minute)
+        and (
+            pd.isna(last_completed_at)
+            or last_completed_at.date() != now.date()
+        )
+    ):
+        print(f"time(hour_value, minute_value): {time(hour_value, int(minute_value))}")
+        print(f"time(now.hour, now.minute): {time(now.hour, now.minute)}")
         should_send = True
     
     if should_send:
