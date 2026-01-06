@@ -50,6 +50,18 @@ def display_table(query):
         cursor.close()
         # NO cerramos conn aquí
 
+def update_record(query, params=None):
+    cursor = conn.cursor()
+    try:
+        cursor.execute(query, params)
+        conn.commit()
+        print("Record updated successfully")
+    except Exception as e:
+        conn.rollback()
+        print("Error updating record:", e)
+    finally:
+        cursor.close()
+
 #%%
 
 data1 = display_table("""                                        
@@ -59,8 +71,6 @@ WHERE activated = TRUE
 """
 )
 
-# Cerrar conexión al final
-conn.close()
 
 #%%
 
@@ -92,6 +102,7 @@ print(now_yyyymm)
 #%%
 
 
+
 for _, row in data1.iterrows():
     should_send = False
     frequency = row['frequency']
@@ -113,13 +124,25 @@ for _, row in data1.iterrows():
     print(f"id: {row['id']}")
 
     if frequency == "monthly" and round(day_value) <= now.day and last_completed_at_yyyymm != now_yyyymm:
-        # print(round(day_value))
-        # print(now.day)
-        # print(last_completed_at.month)
-        # print(now.month)
         should_send = True
     
     if should_send:
         send_telegram_message(BOT_TOKEN, chat_id, reminder)
         print("Sent")
+
+        now = datetime.now()
+
+        query123 = """
+        UPDATE my_schema_1.reminders
+        SET last_completed_at = %s
+        WHERE id = %s
+        """
+
+        update_record(query123, (now, row['id']))
+
         time.sleep(3)  # delays for 3 seconds
+
+#%%
+
+# Cerrar conexión al final
+conn.close()
