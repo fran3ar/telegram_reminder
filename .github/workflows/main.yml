@@ -4,8 +4,11 @@ on:
   push:
     branches: [main]
   workflow_dispatch:  # permite correr manualmente
+  # schedule:
+  #   - cron: "30 16 * * *"  # runs every day at 16:30 Argentina (UTC-3)
+
   schedule:
-    - cron: "30 16 * * *"  # runs every day at 13:30 Argentina (UTC-3)
+   - cron: "*/10 * * * *"  # runs every 10 minutes (UTC)
 
 jobs:
   db_and_telegram_job:  # nombre interno del job
