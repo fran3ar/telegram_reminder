@@ -98,9 +98,14 @@ now_yyyymm = now.strftime("%Y-%m")
 
 print(now_yyyymm)
 
+#%%
+dev_table = display_table("""                                        
+SELECT * FROM my_schema_1.reminders_aux
+where id = 1
+"""
+)
 
 #%%
-
 import os
 
 import time
@@ -112,8 +117,8 @@ dt_time_now = dt_time(now_hour_value, now.minute)
 
 print(f"dt_time_now: {dt_time_now}")
 print(f"now_hour_value: {now_hour_value}")
-print("\n")
-
+print(f"dev: {dev_table['dev'][0]}")
+print("\n" + "="*80) # Print a separator line for logs
 for _, row in data1.iterrows():
     should_send = False
     frequency = row['frequency']
@@ -130,7 +135,8 @@ for _, row in data1.iterrows():
     
     last_completed_at_yyyymm = last_completed_at.strftime("%Y-%m")
 
-    chat_id = row['chat_id']
+    chat_id = dev_table['chat_id'][0] if dev_table['dev'][0] else row['chat_id']
+
     reminder = row['reminder']
 
     print(f"last_completed_at: {last_completed_at}")
@@ -170,8 +176,7 @@ for _, row in data1.iterrows():
         update_record(query123, (datetime(int(now.year),int(now.month),int(now.day),now_hour_value,int(now.minute)), row['id']))
 
     time.sleep(3)  # delays for 3 seconds
-    print("\n")
-
+    print("\n" + "="*80) # Print a separator line for logs
 
 
 #%%
