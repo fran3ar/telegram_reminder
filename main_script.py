@@ -103,14 +103,16 @@ print(now_yyyymm)
 
 import os
 
-print(os.environ)
-
 import time
 from datetime import datetime, time as dt_time 
 
-dt_time_now = dt_time((now.hour) - 3, now.minute)
+now_hour_value = (now.hour - 3) if "GITHUB_REPOSITORY_OWNER_ID" in os.environ else now.hour
+
+dt_time_now = dt_time(now_hour_value, now.minute)
 
 print(f"dt_time_now: {dt_time_now}")
+print(f"now_hour_value: {now_hour_value}")
+print("\n")
 
 for _, row in data1.iterrows():
     should_send = False
@@ -165,10 +167,11 @@ for _, row in data1.iterrows():
         WHERE id = %s
         """
 
-        update_record(query123, (datetime(int(now.year),int(now.month),int(now.day),int(now.hour) - 3,int(now.minute)), row['id']))
+        update_record(query123, (datetime(int(now.year),int(now.month),int(now.day),now_hour_value,int(now.minute)), row['id']))
 
     time.sleep(3)  # delays for 3 seconds
     print("\n")
+
 
 
 #%%
