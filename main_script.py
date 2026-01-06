@@ -101,8 +101,16 @@ print(now_yyyymm)
 
 #%%
 
+import os
+
+print(os.environ)
+
 import time
 from datetime import datetime, time as dt_time 
+
+dt_time_now = dt_time((now.hour) - 3, now.minute)
+
+print(f"dt_time_now: {dt_time_now}")
 
 for _, row in data1.iterrows():
     should_send = False
@@ -115,12 +123,15 @@ for _, row in data1.iterrows():
     hour_value = row['hour_value']
     minute_value = row['minute_value']
     last_completed_at = row['last_completed_at']
-    print(last_completed_at)
+    
+
     
     last_completed_at_yyyymm = last_completed_at.strftime("%Y-%m")
 
     chat_id = row['chat_id']
     reminder = row['reminder']
+
+    print(f"last_completed_at: {last_completed_at}")
     print(f"frequency: {frequency}")
     print(f"id: {row['id']}")
 
@@ -135,17 +146,12 @@ for _, row in data1.iterrows():
         should_send = True
 
     # DAILY
-    if (
-        frequency == "daily"
-        and dt_time(hour_value, int(minute_value)) <= dt_time((now.hour) - 3, now.minute)
-        and (
-            pd.isna(last_completed_at)
-            or last_completed_at.date() != now.date()
-        )
-    ):
-        print(f"time(hour_value, minute_value): {dt_time(hour_value, int(minute_value))}")
-        print(f"time(now.hour, now.minute): {dt_time((now.hour)-3, now.minute)}")
-        should_send = True
+    if frequency == "daily":
+        time_value = dt_time(int(hour_value), int(minute_value))
+        if time_value <= dt_time_now and (pd.isna(last_completed_at) or last_completed_at.date() != now.date()):
+
+            print(f"time_value: {time_value}")
+            should_send = True
     
     if should_send:
         send_telegram_message(BOT_TOKEN, chat_id, reminder)
@@ -162,6 +168,7 @@ for _, row in data1.iterrows():
         update_record(query123, (datetime(int(now.year),int(now.month),int(now.day),int(now.hour) - 3,int(now.minute)), row['id']))
 
     time.sleep(3)  # delays for 3 seconds
+    print("\n")
 
 
 #%%
